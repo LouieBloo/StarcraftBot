@@ -3,6 +3,8 @@
 #include "MapTools.h"
 
 #include <BWAPI.h>
+#include "../../visualstudio/MessageServer.h"
+
 
 class StarterBot
 {
@@ -30,4 +32,11 @@ public:
 	void onUnitShow(BWAPI::Unit unit);
 	void onUnitHide(BWAPI::Unit unit);
 	void onUnitRenegade(BWAPI::Unit unit);
+
+private:
+	boost::asio::io_context io_context;
+	MessageServer* messageServer;
+	bool sentMessage;
+
+	void serializeGameAndSendToPython();
 };

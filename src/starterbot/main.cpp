@@ -1,3 +1,6 @@
+#include <boost/asio.hpp>
+#include <boost/lambda/lambda.hpp>
+
 #include <BWAPI.h>
 #include <BWAPI/Client.h>
 #include "StarterBot.h"
@@ -5,6 +8,10 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include "../../visualstudio/MessageServer.h"
+
+
+using boost::asio::ip::tcp;
 
 void PlayGame();
 void ParseReplay();

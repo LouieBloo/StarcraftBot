@@ -1,10 +1,27 @@
+#include <boost/asio.hpp>
+#include <boost/lambda/lambda.hpp>
+
 #include "StarterBot.h"
 #include "Tools.h"
 #include "MapTools.h"
+#include "json.hpp"
 
-StarterBot::StarterBot()
+using json = nlohmann::json;
+using boost::asio::ip::tcp;
+
+
+StarterBot::StarterBot() 
 {
+    sentMessage = false;
     
+    try {
+        //boost::asio::io_context io_context;
+        //messageServer = new MessageServer(io_context);
+        //serializeGameAndSendToPython();
+    }
+    catch (std::exception& e) {
+        std::cerr << "Exception starting message server: " << e.what() << std::endl;
+    }
 }
 
 // Called when the bot starts!
@@ -41,6 +58,26 @@ void StarterBot::onFrame()
 
     // Draw some relevent information to the screen to help us debug the bot
     drawDebugInformation();
+
+    //serializeGameAndSendToPython();
+}
+
+void StarterBot::serializeGameAndSendToPython() {
+    //if (sentMessage) { return; }
+    std::cerr << "FURTHER INSIDE SERIALIZE" << std::endl;
+    try {
+             json j = {
+            {"name", "John"},
+            {"age", 30},
+            {"isMarried", true}
+            };
+            messageServer->send_message(j);
+    }
+    catch (std::exception& e) {
+        std::cerr << "Exception sending message: " << e.what() << std::endl;
+    }
+
+    sentMessage = true;
 }
 
 // Send our idle workers to mine minerals so they don't just stand there
@@ -54,6 +91,7 @@ void StarterBot::sendIdleWorkersToMinerals()
         // Check the unit type, if it is an idle worker, then we want to send it somewhere
         if (unit->getType().isWorker() && unit->isIdle())
         {
+            BWAPI::Broodwar->printf("Unit type %s", unit->getType().c_str());
             // Get the closest mineral to this worker unit
             BWAPI::Unit closestMineral = Tools::GetClosestUnitTo(unit, BWAPI::Broodwar->getMinerals());
 
